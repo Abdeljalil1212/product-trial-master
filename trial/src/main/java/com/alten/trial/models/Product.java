@@ -4,6 +4,7 @@ import com.alten.trial.enums.InventoryStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -33,7 +34,7 @@ public class Product {
     private String category;
 
     @Column(name = "PRICE")
-    private double price;
+    private BigDecimal price;
 
     @Column(name = "QUANTITY")
     private int quantity;
