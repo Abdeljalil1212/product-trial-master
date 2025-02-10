@@ -10,19 +10,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
 @AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService; // Injecté normalement
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
             throws ServletException, IOException {
         final String header = request.getHeader("Authorization");
 

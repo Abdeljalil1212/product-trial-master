@@ -1,15 +1,13 @@
 package com.alten.trial.services.impl;
 
 import com.alten.trial.dtos.UserRequest;
-import com.alten.trial.models.User;
+import com.alten.trial.models.AppUser;
 import com.alten.trial.repositories.UserRepository;
 import com.alten.trial.security.jwt.JwtUtil;
 import com.alten.trial.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private final JwtUtil jwtUtil;
 
@@ -28,7 +26,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Email déjà créé");
         }
 
-        User user = new User();
+        AppUser user = new AppUser();
         user.setUsername(request.getUsername());
         user.setFirstname(request.getFirstname());
         user.setEmail(request.getEmail());
@@ -38,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public String authenticate(String email, String password) {
-        User user = userRepository.findByEmail(email)
+        AppUser user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -48,8 +46,4 @@ public class UserServiceImpl implements UserService {
         return jwtUtil.generateToken(user.getEmail());
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }
